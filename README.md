@@ -15,7 +15,10 @@
     * Turn on **Features > Enable Config Connector**
 
 ### Configure Config Connector
-0. `gcloud container clusters get-credentials cluster-1 --region us-central1`
+0. Create the cluster
+    ```
+    gcloud container clusters get-credentials cluster-1 --region us-central1
+    ```
 0. Create the service account config connector will use
     ```
     gcloud iam service-accounts create sample-app-config-connector
@@ -44,16 +47,6 @@
     ```
 0. Create a network for pods to use to communicate with their redis instance
     ```
-    cat > default-network.yaml <<EOF
-    ---
-    apiVersion: compute.cnrm.cloud.google.com/v1beta1
-    kind: ComputeNetwork
-    metadata:
-      name: default
-    spec:
-      routingMode: REGIONAL
-      autoCreateSubnetworks: true
-    EOF
     kubectl apply -f default-network.yaml --context gke_$(gcloud config get-value project)_us-central1_cluster-1
     gcloud compute addresses create sample-app \
         --global \
@@ -68,7 +61,7 @@
         --project=$(gcloud config get-value project)
     ```
 
-### TODO:
+### Deploy The Application
 0. Build the container image
     ```
     gcloud builds submit . --tag=gcr.io/$(gcloud config get-value project)/sample-app
